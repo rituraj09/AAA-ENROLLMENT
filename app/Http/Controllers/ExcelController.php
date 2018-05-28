@@ -12,6 +12,7 @@ class ExcelController extends Controller
     	$path = $request->file('excel_data')->getRealPath();
     	$data = Excel::load($path, function($reader) {})->get();
 
+    	dump($data);
     	foreach($data as $k => $v) {
     		
     	}

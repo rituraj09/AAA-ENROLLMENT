@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Upload Excel') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('upload') }}">
+                    <form method="POST" action="{{ url('upload') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -29,7 +29,7 @@
                             <label for="date" class="col-sm-4 col-form-label text-md-right">{{ __('Date') }}</label>
 
                             <div class="col-md-6">
-                                <input id="date" type="text" class="datepicker form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ old('date') }}" required autofocus>
+                                <input id="date" type="text" autocomplete="off" class="datepicker form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" name="date" value="{{ old('date') }}" required autofocus>
 
                                 @if ($errors->has('date'))
                                     <span class="invalid-feedback">
