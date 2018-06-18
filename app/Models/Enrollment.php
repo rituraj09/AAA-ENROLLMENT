@@ -28,16 +28,19 @@ class Enrollment extends Model
     	'reportdate' => 'required',
     ];
 
-    public function district()
+
+    public function atalvendors()
     {
-        return $this->belongsTo('App\Models\District');
-    }
-    public function atalvendor()
-    {
-        return $this->belongsTo('App\Models\AtalVendor');
-    }
+        return $this->belongsTo('App\Models\AtalVendor','atal_vendor_id');
+	}
+	
     public function tpa()
     {
-        return $this->belongsTo('App\Models\TPA');
+        return $this->belongsTo('App\Models\TPA','t_p_a_id'); 
+	}
+	
+	public function district()
+    {
+        return $this->belongsTo('App\Models\District');
     }
 }

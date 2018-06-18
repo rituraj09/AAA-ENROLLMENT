@@ -82,7 +82,8 @@ class ExcelController extends Controller
 	    		$validator = Validator::make($enroll_arr, Enrollment::$rules);
         		if ($validator->fails()) return Redirect::back()->withErrors($validator)->withInput();
 	    		$eroll = Enrollment::create($enroll_arr); 
-	    		DB::commit();
+				DB::commit();
+				return redirect('')->with('success','Import Successfully');
     		}
     		
     	}
