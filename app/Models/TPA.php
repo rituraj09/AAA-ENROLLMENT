@@ -12,4 +12,8 @@ class TPA extends Model
     public static $rules 	= [
     	'name' 				=> 'required',
     ];
+    public function enrollment()
+    {
+        return $this->hasMany('App\Models\Enrollment');
+    }
 }

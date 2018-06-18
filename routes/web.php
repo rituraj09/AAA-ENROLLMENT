@@ -18,5 +18,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/report', 'HomeController@report')->name('report');
 
 Route::post('/upload', 'ExcelController@upload')->name('exce_upload');

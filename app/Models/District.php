@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class District extends Model
 {
-    protected $fillable 	= array('name');
+    protected $fillable 	= array('districtname');
 	protected $table    	= 'districts';
     protected $guarded   	= ['_token'];
     public static $rules 	= [
-    	'name' 				=> 'required',
+    	'districtname' 				=> 'required',
     ];
+    public function enrollment()
+    {
+        return $this->hasMany('App\Models\Enrollment');
+    }
 }

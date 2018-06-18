@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\District;
+use App\Models\TPA;
+use App\Models\AtalVendor;
+use App\Models\Enrollment;
+
 class HomeController extends Controller
 {
     /**
@@ -11,10 +16,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+   /* public function __construct()
     {
         $this->middleware('auth');
-    }
+    }*/
 
     /**
      * Show the application dashboard.
@@ -24,5 +29,10 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+    public function report()
+    {
+        $enrollment =  Enrollment::all();
+        return view('report')->with('enrollment',$enrollment);
     }
 }
