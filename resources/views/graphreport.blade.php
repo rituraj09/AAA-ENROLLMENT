@@ -39,56 +39,77 @@
 var result = <?php echo $result; ?>; 
 var resultline = <?php echo $resultline; ?>;  
  google.charts.load('current', {'packages':['corechart']});
- google.charts.setOnLoadCallback(drawVisualization); 
- google.charts.setOnLoadCallback(linechart);
-
- function drawVisualization() {
-  google.charts.load('current', {
-  callback: drawChart,
-  packages:['corechart']
-});
+ google.charts.setOnLoadCallback(drawChart); 
+ google.charts.setOnLoadCallback(linechart); 
 
 function drawChart() { 
+   var data = google.visualization.arrayToDataTable(result);
 
-  // Some raw data (not necessarily accurate)
-  var data = google.visualization.arrayToDataTable(result);
-    
-    
-  var options = {
-    animation:{
-        duration: 1000,
-        easing: 'out',
-        startup: true
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0,
+      1, {
+        calc: function (dt, row) {
+          return dt.getValue(row, 1);
+        },
+        type: "number",
+        role: "annotation"
       },
-  title : 'Daily Progress Data',
-  vAxis: {title: 'Enrollment Data'}, isStacked: true,
-  hAxis: {title: 'Date'},
-  seriesType: 'bars' 
-  };
+      2, {
+        calc: function (dt, row) {
+          return '';
+        },
+        type: "string",
+        role: "annotation"
+      },
+      {
+        calc: function (dt, row) {
+          return 0;
+        },
+        label: "Total Enrolled",
+        type: "number",
+      },
+      {
+        calc: function (dt, row) {
+          var val=dt.getValue(row, 1) + dt.getValue(row, 2);
+          return 'Total Enrolled: '+val;
+        },
+        type: "string",
+        role: "annotation"
+      }
+    ]);
 
-var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));  
-chart.draw(data, options);
-}
+      var options = {
+        title: "Daily Progress Data",
+        vAxis: {title: 'Enrollment Data'}, isStacked: true,
+        hAxis: {title: 'Date'} 
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("chart_div"));
+      chart.draw(view, options);
 }
 
 function linechart() {
-   // Some raw data (not necessarily accurate)
-   var data = google.visualization.arrayToDataTable(resultline);
-  
+  var data = google.visualization.arrayToDataTable(resultline);
+    var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" }]);
 
-   var options = {
-    animation:{
-      duration: 1000,
-      easing: 'out',
-      startup: true
-    },
-    legend: 'none',
-    pointSize: 10,
-    title: 'Company Performance', 
-  };
-
-var chart = new google.visualization.ComboChart(document.getElementById('chart_line'));
-chart.draw(data, options);
+      var options = {
+        animation:{
+          duration: 1000,
+          easing: 'out',
+          startup: true
+        },
+        vAxis: {title: 'Total Enrollment'},
+        hAxis: {title: 'Date'} ,
+        legend: 'none',
+        pointSize: 10,
+        title: 'Progress Chart', 
+      };
+      var chart = new google.visualization.ComboChart(document.getElementById("chart_line"));
+      chart.draw(view, options);
 }
 </script>
 @endsection
