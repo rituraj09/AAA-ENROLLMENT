@@ -42,7 +42,7 @@
     
 @if(count($enrollment) > 0) 
 
-<?php $i=1; $bpl=0; $apl=0; $minor=0; $tot=0; $card=0;?>
+<?php $i =1+ $enrollment->perPage() * ($enrollment->currentPage() - 1); $bpl=0; $apl=0; $minor=0; $tot=0; $card=0;?>
     <div class="row p-2">
         <div class="col-md-12">
             <table class="table table-bordered">
@@ -54,7 +54,7 @@
                     <th> Minor SCSP Enrolled</th>
                     <th> Total Enrolled</th>
                     <th> Card Issued</th>
-                    <th> Report As On</th>
+                    <th width="120px"> Report As On</th>
                     <th></th>
                 </tr>
                 @foreach( $enrollment as $enroll)
@@ -99,7 +99,7 @@
                     <td>
                     </td>                    
                     <td>
-                    <b>Total</b>
+                    <b>Page Total</b>
                     </td>                    
                     <td align="right">
                     <b><?php echo $bpl;?></b>
@@ -114,16 +114,21 @@
                     <b><?php echo $tot;?></b>
                     </td>     
                     <td align="right">
-                    <b><?php echo $card;?></b>
+                    <b><?php echo $tot;?></b>
                     </td>                 
                     <td>
                     </td>                    
                     <td>
                     </td>
                 </tr>
+                
             </table>
         </div> 
+        <div class="col-md-12">
+            {{$enrollment->links()}}
     </div>
+    </div>
+    
 </div>
 @endif
 @endsection

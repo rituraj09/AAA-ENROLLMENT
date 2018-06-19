@@ -39,7 +39,7 @@ class HomeController extends Controller
             $where['district_id']= $request->dist_id;
         }
         //$enrollment = Enrollment::where($where)->orderBy('id', 'asc')->paginate(11); 
-        $enrollment = Enrollment::where($where)->orderBy('id', 'asc')->get(); 
+        $enrollment = Enrollment::where($where)->orderBy('id', 'asc')->paginate(25); 
         return view('report', compact('enrollment','request'))->with('dist', $dist); 
     } 
 

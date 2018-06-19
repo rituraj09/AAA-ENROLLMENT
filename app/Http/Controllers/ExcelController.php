@@ -17,19 +17,20 @@ class ExcelController extends Controller
     	$path = $request->file('excel_data')->getRealPath();
     	$data = Excel::load($path, function($reader) {})->get();
 
+		$msgtype='error';
+		$msg='Somethings went Wrong!';
 		//dump($data);
 		$enroll_data= Enrollment::where('reportdate', date('Y-m-d', strtotime($request->date)));
 			if(!$enroll_data->count())
 			{
+				$a=0;
 				foreach($data as $k => $v) {
-					if($v->district != '') {
-
+					DB::beginTransaction();
+					if($v->district != '') { 
 						/*
 						** Insert dist data
 						* @return district id
-						*/
-						DB::beginTransaction();
-						
+						*/ 
 							$dist_data = District::where('districtname', trim($v->district));
 							if(!$dist_data->count())
 							{
@@ -86,10 +87,12 @@ class ExcelController extends Controller
 							$eroll = Enrollment::create($enroll_arr); 
 							$msgtype='success';
 							$msg='Import Successfully';
-						
-						DB::commit();
 					}
-					
+					else
+					{  
+					}
+						
+					DB::commit();
 				}
 			}
 			else
