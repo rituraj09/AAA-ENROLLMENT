@@ -13,10 +13,12 @@
                     <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
                       <a class="nav-link" href="{{url('')}}">Import <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item {{ Request::is('report') ? 'active' : '' }}">
+                    <li class="nav-item {{ Request::is('report*') ? 'active' : '' }}">
                       <a class="nav-link" href="{{url('/report')}}">Report</a>
                     </li>
-                  
+                    <li class="nav-item {{ Request::is('graphreport*') ? 'active' : '' }}">
+                      <a class="nav-link" href="{{url('/graphreport')}}">Graph Report</a>
+                    </li>
                   </ul> 
                 </div>
             </div>

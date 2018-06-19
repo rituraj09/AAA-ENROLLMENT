@@ -28,10 +28,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $enrollment = Enrollment::all(); 
-        return view('report')->with('enrollment', $enrollment); 
+        $dist= District::all(['districtname','id']);
+        $where = [];
+        if($request->q) {
+            $where['reportdate'] =  date('Y-m-d', strtotime($request->q));
+        }
+        if($request->dist_id){            
+            $where['district_id']= $request->dist_id;
+        }
+        //$enrollment = Enrollment::where($where)->orderBy('id', 'asc')->paginate(11); 
+        $enrollment = Enrollment::where($where)->orderBy('id', 'asc')->get(); 
+        return view('report', compact('enrollment','request'))->with('dist', $dist); 
     } 
 
     public function show($id) 
@@ -39,4 +48,31 @@ class HomeController extends Controller
         $enrollment =  Enrollment::find($id); 
         return view('show')->with('enroll', $enrollment); 
     }
+
+    public function graph(Request $request) 
+    {  
+        $dist= District::all(['districtname','id']);
+        $where = []; 
+        if($request->dist_id){            
+            $where['district_id']= $request->dist_id;
+        }
+        $data=DB::table('enrollments')
+                ->select(
+                    DB::raw("reportdate"),
+                    DB::raw("SUM(bpl_scsp_enrolled) as bpl"),
+                    DB::raw("SUM(apl_scsp_enrolled) as apl"),
+                    DB::raw("SUM(minor_scsp_enrolled) as minor") 
+                )
+                ->where($where)
+                ->orderBy("reportdate")
+                    ->groupBy(DB::raw("reportdate"))
+                    ->get();
+        $result[] = ['Date','BPL','APL', 'Minor'];
+        foreach ($data as $key => $value) {
+            $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->bpl, (int)$value->apl, (int)$value->minor ];
+        }
+            // dump(json_encode($result));
+        //return view('graphreport')->with('result',json_encode($result))->with('dist', $dist); 
+        return view('graphreport', compact('request'))->with('result',json_encode($result))->with('dist', $dist); 
+    }   
 }

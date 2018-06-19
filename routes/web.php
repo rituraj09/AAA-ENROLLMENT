@@ -20,6 +20,7 @@ Auth::routes();
 #Route::get('/home', 'HomeController@index')->name('home');
 #Route::get('/report', 'HomeController@report')->name('report');
 #Route::get('/show', 'HomeController@show');
-Route::resource('report', 'HomeController');
+Route::resource('report', 'HomeController'); 
+Route::get('/graphreport', 'HomeController@graph');
 
 Route::post('/upload', 'ExcelController@upload')->name('exce_upload');
