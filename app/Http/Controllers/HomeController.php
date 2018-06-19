@@ -59,20 +59,24 @@ class HomeController extends Controller
         $data=DB::table('enrollments')
                 ->select(
                     DB::raw("reportdate"),
-                    DB::raw("SUM(bpl_scsp_enrolled) as bpl"),
-                    DB::raw("SUM(apl_scsp_enrolled) as apl"),
-                    DB::raw("SUM(minor_scsp_enrolled) as minor") 
+                    DB::raw("SUM(total_enrolled) as tot"),
+                    DB::raw("SUM(scsp_card_issued) as card")
                 )
                 ->where($where)
                 ->orderBy("reportdate")
                     ->groupBy(DB::raw("reportdate"))
                     ->get();
-        $result[] = ['Date','BPL','APL', 'Minor'];
+        $result[] = ['Date','Card Issued','Not Issued' ];
         foreach ($data as $key => $value) {
-            $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->bpl, (int)$value->apl, (int)$value->minor ];
+            $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
+        }
+
+        $resultline[] = ['Date','Total Enrolled'];
+        foreach ($data as $key => $value) {
+            $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->tot];
         }
             // dump(json_encode($result));
         //return view('graphreport')->with('result',json_encode($result))->with('dist', $dist); 
-        return view('graphreport', compact('request'))->with('result',json_encode($result))->with('dist', $dist); 
+        return view('graphreport', compact('request'))->with('result',json_encode($result))->with('resultline',json_encode($resultline))->with('dist', $dist); 
     }   
 }

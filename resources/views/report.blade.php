@@ -42,7 +42,7 @@
     
 @if(count($enrollment) > 0) 
 
-<?php $i=1; $bpl=0; $apl=0; $minor=0; $tot=0;?>
+<?php $i=1; $bpl=0; $apl=0; $minor=0; $tot=0; $card=0;?>
     <div class="row p-2">
         <div class="col-md-12">
             <table class="table table-bordered">
@@ -53,6 +53,7 @@
                     <th> APL SCSP Enrolled</th>
                     <th> Minor SCSP Enrolled</th>
                     <th> Total Enrolled</th>
+                    <th> Card Issued</th>
                     <th> Report As On</th>
                     <th></th>
                 </tr>
@@ -80,9 +81,14 @@
                         {{ $enroll->total_enrolled }}
                       <input type="hidden" val="{{ $tot += $enroll->total_enrolled }}">   
                     </td>
+                    <td align="right">
+                        {{ $enroll->scsp_card_issued }}
+                      <input type="hidden" val="{{ $card += $enroll->scsp_card_issued }}">   
+                    </td>
                     <td>
                         {{ date('d-m-Y', strtotime($enroll->reportdate))}}
                     </td>
+                    
                     <td align="center">
                     <a href="{{ url('report/'.$enroll->id ) }}" class="btn btn-sm btn-info">View</a>
                     </td>
@@ -106,7 +112,10 @@
                     </td>                    
                     <td align="right">
                     <b><?php echo $tot;?></b>
-                    </td>                    
+                    </td>     
+                    <td align="right">
+                    <b><?php echo $card;?></b>
+                    </td>                 
                     <td>
                     </td>                    
                     <td>

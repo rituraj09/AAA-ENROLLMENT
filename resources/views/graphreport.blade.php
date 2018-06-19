@@ -24,32 +24,70 @@
     </div>
   </form>
 </div>
-<div class="row">
-  <div class="col-md-12 p-1">
+<div class="row p-1">
+  <div class="col-md-12">
     <div id="chart_div" style="height:500px;"></div>
   </div>
 </div>
-
+<div class="row p-1">
+  <div class="col-md-12 p-1">
+    <div id="chart_line" style="height:500px;"></div>
+  </div>
+</div>
 
 <script type="text/javascript">
-var result = <?php echo $result; ?>;
-console.log(result);
+var result = <?php echo $result; ?>; 
+var resultline = <?php echo $resultline; ?>;  
  google.charts.load('current', {'packages':['corechart']});
- google.charts.setOnLoadCallback(drawVisualization);
+ google.charts.setOnLoadCallback(drawVisualization); 
+ google.charts.setOnLoadCallback(linechart);
 
  function drawVisualization() {
+  google.charts.load('current', {
+  callback: drawChart,
+  packages:['corechart']
+});
+
+function drawChart() { 
+
+  // Some raw data (not necessarily accurate)
+  var data = google.visualization.arrayToDataTable(result);
+    
+    
+  var options = {
+    animation:{
+        duration: 1000,
+        easing: 'out',
+        startup: true
+      },
+  title : 'Daily Progress Data',
+  vAxis: {title: 'Enrollment Data'}, isStacked: true,
+  hAxis: {title: 'Date'},
+  seriesType: 'bars' 
+  };
+
+var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));  
+chart.draw(data, options);
+}
+}
+
+function linechart() {
    // Some raw data (not necessarily accurate)
-   var data = google.visualization.arrayToDataTable(result);
+   var data = google.visualization.arrayToDataTable(resultline);
   
 
-var options = {
- title : 'Daily Progress Data',
- vAxis: {title: 'Enrollment Data'},
- hAxis: {title: 'Date'},
- seriesType: 'bars' 
-};
+   var options = {
+    animation:{
+      duration: 1000,
+      easing: 'out',
+      startup: true
+    },
+    legend: 'none',
+    pointSize: 10,
+    title: 'Company Performance', 
+  };
 
-var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+var chart = new google.visualization.ComboChart(document.getElementById('chart_line'));
 chart.draw(data, options);
 }
 </script>

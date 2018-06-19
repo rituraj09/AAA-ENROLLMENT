@@ -75,11 +75,10 @@ class ExcelController extends Controller
 							$enroll_arr['apl_district_kiosk_enrolled']=$v->apl_district_kiosk_enrolled;
 							$enroll_arr['minor_scsp_enrolled']=$v->minor_scsp_enrolled;
 							$enroll_arr['minor_district_kiosk_enrolled']=$v->minor_district_kiosk_enrolled;
-							$enroll_arr['total_enrolled']=$v->total_no_of_person_enrolledall;
-							
-							$enroll_arr['scsp_card_issued']=$v->total_no_of_person_enrolledall;
-							$enroll_arr['district_kiosk_card_issued']=$v->card_scsp_enrolled;
-							$enroll_arr['fee_collected_from_apl']=$v->card_district_kiosk_enrolled; 
+							$enroll_arr['total_enrolled']=$v->total_no_of_person_enrolledall; 
+							$enroll_arr['scsp_card_issued']=$v->card_scsp_enrolled;
+							$enroll_arr['district_kiosk_card_issued']=$v->card_district_kiosk_enrolled;
+							$enroll_arr['fee_collected_from_apl']="0.00"; 
 							$enroll_arr['reportdate'] = date('Y-m-d', strtotime($request->date));
 
 							$validator = Validator::make($enroll_arr, Enrollment::$rules);
