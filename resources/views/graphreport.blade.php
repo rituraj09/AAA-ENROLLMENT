@@ -69,11 +69,10 @@ function drawChart() {
         type: "number",
       },
       {
-        calc: function (dt, row) {
-          var val=dt.getValue(row, 1) + dt.getValue(row, 2);
-          return 'Total Enrolled: '+val;
+        calc: function (dt, row) { 
+          return dt.getValue(row, 1) + dt.getValue(row, 2);
         },
-        type: "string",
+        type: "number",
         role: "annotation"
       }
     ]);
