@@ -82,7 +82,16 @@ class HomeController extends Controller
 
         $resultline[] = ['Date','Total Enrolled'];
         foreach ($data as $key => $value) {
-            $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->tot];
+            $oldval =   0;
+            if($key==0)
+            {
+                $oldval= 0;
+            }
+            else
+            {
+                $oldval=(int)$data[$key]->tot-(int)$data[$key-1]->tot;
+            }
+            $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];
         }
             // dump(json_encode($result));
         //return view('graphreport')->with('result',json_encode($result))->with('dist', $dist); 

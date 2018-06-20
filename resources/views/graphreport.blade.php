@@ -103,6 +103,11 @@ function drawChart() {
     ]);
 
       var options = {
+        animation:{
+          duration: 1000,
+          easing: 'out',
+          startup: true
+        },
         title: "Daily Progress Data",
         vAxis: {title: 'Enrollment Data'}, isStacked: true,
         hAxis: {title: 'Date'} 
@@ -126,11 +131,11 @@ function linechart() {
           easing: 'out',
           startup: true
         },
-        vAxis: {title: 'Total Enrollment'},
+        vAxis: {title: 'Total Progress in Enrollment'},
         hAxis: {title: 'Date'} ,
         legend: 'none',
         pointSize: 10,
-        title: 'Progress Chart', 
+        title: 'Rate of Progress Chart', 
       };
       var chart = new google.visualization.ComboChart(document.getElementById("chart_line"));
       chart.draw(view, options);
