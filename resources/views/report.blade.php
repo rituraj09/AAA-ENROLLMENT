@@ -125,7 +125,7 @@
             </table>
         </div> 
         <div class="col-md-12">
-            {{$enrollment->links()}}
+            {{$enrollment->appends(Request::only('q'))->appends(Request::only('dist_id'))->links()}}
     </div>
     </div>
     

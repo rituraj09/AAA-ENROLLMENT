@@ -85,7 +85,7 @@ class HomeController extends Controller
             $oldval =   0;
             if($key==0)
             {
-                $oldval= 0;
+                $oldval=  (int)$value->tot;
             }
             else
             {
