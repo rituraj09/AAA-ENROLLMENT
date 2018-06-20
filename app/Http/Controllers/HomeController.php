@@ -74,7 +74,23 @@ class HomeController extends Controller
                 ->where($where) 
                 ->orderBy("reportdate")
                     ->groupBy(DB::raw("reportdate"))
-                    ->get();
+                    ->get();      
+                 
+        if($request->date1 && $request->date2){   
+             $oldata=DB::table('enrollments')
+            ->select( 
+                DB::raw("SUM(total_enrolled) as tot")  
+            )
+            ->where('reportdate','<',(date('Y-m-d', strtotime($request->date1))))
+            ->where($where) 
+            ->orderBy("reportdate", 'desc')->groupBy(DB::raw("reportdate"))
+                ->take(1)->get() ;    
+        }  
+        else
+        {
+            $oldata=DB::table('enrollments') 
+            ->where('district_id','0')->get() ; 
+        }
         $result[] = ['Date','Card Issued','Not Issued' ];
         foreach ($data as $key => $value) {
             $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
@@ -85,7 +101,20 @@ class HomeController extends Controller
             $oldval =   0;
             if($key==0)
             {
-                $oldval=  (int)$value->tot;
+                if(count($oldata) > 0)
+                {
+                    if($request->date1 && $request->date2)
+                    {
+                    $oldval=  (int)$value->tot - (int)$oldata[0]->tot  ;
+                    }
+                    else
+                    { 
+                    $oldval=  (int)$value->tot;
+                    }
+                }
+                else{
+                    $oldval=  (int)$value->tot;
+                }
             }
             else
             {
