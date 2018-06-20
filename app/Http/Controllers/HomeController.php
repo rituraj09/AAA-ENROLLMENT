@@ -56,13 +56,22 @@ class HomeController extends Controller
         if($request->dist_id){            
             $where['district_id']= $request->dist_id;
         }
+        $q =""; 
+        if($request->date1 && $request->date2){             
+            $q =array(date('Y-m-d', strtotime($request->date1)), date('Y-m-d', strtotime($request->date2)));
+        } 
+        else
+        {
+            $q =array('2013-01-01', date('Y-m-d'));
+        }
         $data=DB::table('enrollments')
                 ->select(
                     DB::raw("reportdate"),
                     DB::raw("SUM(total_enrolled) as tot"),
                     DB::raw("SUM(scsp_card_issued) as card")
                 )
-                ->where($where)
+                ->whereBetween('reportdate',$q)
+                ->where($where) 
                 ->orderBy("reportdate")
                     ->groupBy(DB::raw("reportdate"))
                     ->get();

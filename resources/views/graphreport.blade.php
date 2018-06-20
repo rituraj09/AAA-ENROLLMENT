@@ -2,28 +2,54 @@
 
 @section('content')
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div class="row">
-  <form action="{{url('graphreport')}}" method="GET" role="search">
-    <div class="col-md-12"> 
-      <div class="input-group">
-          {{ csrf_field() }}
-          <label for="staticEmail" class="col-sm-2 col-form-label">District:</label>
-          <div class="col-sm-7">    
-            <select class="form-control" name="dist_id">
-                <option value="0">--All District--</option>
-                @foreach($dist as $dist)
-                  <option value="{{$dist->id}}" " {{ $dist->id == $request->dist_id ? 'selected="selected"' : '' }}">{{$dist->districtname}}</option>
-                @endforeach
-            </select>       
+
+  <form action="{{url('graphreport')}}" method="GET" role="search" class="form-horizontal">
+  <div class="row">
+    <div class="col-md-12"  >
+      {{ csrf_field() }} 
+      <div class="row">
+        <div class="col-md-3"  >
+          <div class="input-group">
+            <label for="staticEmail" class="col-sm-3 col-form-label">District:</label>
+            <div class="col-sm-9">    
+              <select class="form-control" name="dist_id">
+                  <option value="0">--All District--</option>
+                  @foreach($dist as $dist)
+                    <option value="{{$dist->id}}" " {{ $dist->id == $request->dist_id ? 'selected="selected"' : '' }}">{{$dist->districtname}}</option>
+                  @endforeach
+              </select>       
+            </div>  
           </div>
-          <span class="input-group-btn">
+        </div>
+        
+        <div class="col-md-4" >
+          <div class="input-group">
+            <label for="staticEmail" class="col-sm-4 col-form-label">From Date:</label>
+            <div class="col-sm-7">
+              <input id="date1" type="text" autocomplete="off" 
+              class="datepicker form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" 
+              name="date1" value="{{ $request->date1 }}"> 
+            </div>
+          </div>
+        </div>   
+        <div class="col-md-4" >
+          <div class="input-group">
+            <label for="staticEmail" class="col-sm-3 col-form-label">To Date:</label>
+            <div class="col-sm-7">
+              <input id="date2" type="text" autocomplete="off" 
+              class="datepicker form-control{{ $errors->has('date') ? ' is-invalid' : '' }}" 
+              name="date2" value="{{ $request->date2 }}"> 
+            </div>
+          </div>
+        </div>  
+        <div class="col-md-1" > 
             <button type="submit" class="btn btn-info"> Search
-            </button>
-          </span>
+            </button> 
+        </div> 
       </div>
-    </div>
+    </div> 
+  </div>
   </form>
-</div>
 <div class="row p-1">
   <div class="col-md-12">
     <div id="chart_div" style="height:500px;"></div>
@@ -37,11 +63,10 @@
 
 <script type="text/javascript">
 var result = <?php echo $result; ?>; 
-var resultline = <?php echo $resultline; ?>;  
+var resultline = <?php echo $resultline; ?>;   
  google.charts.load('current', {'packages':['corechart']});
  google.charts.setOnLoadCallback(drawChart); 
- google.charts.setOnLoadCallback(linechart); 
-
+ google.charts.setOnLoadCallback(linechart);  
 function drawChart() { 
    var data = google.visualization.arrayToDataTable(result);
 
