@@ -91,12 +91,24 @@ class HomeController extends Controller
             $oldata=DB::table('enrollments') 
             ->where('district_id','0')->get() ; 
         }
-        $result[] = ['Date','Card Issued','Not Issued' ];
+        $result[0] = ['Date','Card Issued','Not Issued' ];
         foreach ($data as $key => $value) {
-            $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
-        }
+            if($request->date1 && $request->date2)
+            { 
+                $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
+              
+            }
+            else{                
+                if($key!=0)
+                { 
+                    $result[++$key-1] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
+                }
+                else{     
+               }
+            }
+        }  
 
-        $resultline[] = ['Date','Total Enrolled'];
+        $resultline[0] = ['Date','Total Enrolled'];
         foreach ($data as $key => $value) {
             $oldval =   0;
             if($key==0)
@@ -104,26 +116,33 @@ class HomeController extends Controller
                 if(count($oldata) > 0)
                 {
                     if($request->date1 && $request->date2)
-                    {
-                    $oldval=  (int)$value->tot - (int)$oldata[0]->tot  ;
+                    { 
+                       $oldval=  (int)$value->tot - (int)$oldata[0]->tot  ;  
+                       $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];
+                     
                     }
                     else
                     { 
-                    $oldval=  (int)$value->tot;
+                    $oldval=  (int)$value->tot;  
                     }
                 }
                 else{
-                    $oldval=  (int)$value->tot;
+                    $oldval=  (int)$value->tot;   
                 }
             }
             else
-            {
+            {  
                 $oldval=(int)$data[$key]->tot-(int)$data[$key-1]->tot;
+                if($request->date1 && $request->date2)
+                { 
+                $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];  
+                }
+                else{                    
+                $resultline[++$key-1] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];  
+                }
             }
-            $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];
-        }
-            // dump(json_encode($result));
-        //return view('graphreport')->with('result',json_encode($result))->with('dist', $dist); 
+            
+        }   
         return view('graphreport', compact('request'))->with('result',json_encode($result))->with('resultline',json_encode($resultline))->with('dist', $dist); 
     }   
 }
