@@ -52,12 +52,21 @@
   </form>
 <div class="row p-1">
   <div class="col-md-12">
-    <div id="chart_div" style="height:500px;"></div>
+    @if( count(json_decode($result))  > 1 ) 
+    <div id="chart_div" style="height:500px;"></div> 
+    @else
+    No Records
+    @endif
   </div>
+
 </div>
 <div class="row p-1">
   <div class="col-md-12 p-1">
+  
+  @if( count(json_decode($resultline))  > 1) 
     <div id="chart_line" style="height:500px;"></div>
+    
+    @endif
   </div>
 </div>
 
@@ -67,7 +76,7 @@ var resultline = <?php echo $resultline; ?>;
  google.charts.load('current', {'packages':['corechart']});
  google.charts.setOnLoadCallback(drawChart); 
  google.charts.setOnLoadCallback(linechart);  
-function drawChart() { 
+function drawChart() {  
    var data = google.visualization.arrayToDataTable(result);
 
       var view = new google.visualization.DataView(data);
@@ -114,6 +123,7 @@ function drawChart() {
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("chart_div"));
       chart.draw(view, options);
+     
 }
 
 function linechart() {
