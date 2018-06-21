@@ -67,15 +67,20 @@ class HomeController extends Controller
                 ->where($where);
                      
 
-        if($request->date1 && $request->date2){       
-            $data =   $data->whereBetween('reportdate', [date('Y-m-d', strtotime($request->date1)),date('Y-m-d', strtotime($request->date2))]);      
+        if($request->date1){       
+            $data =   $data->where('reportdate','>=', [date('Y-m-d', strtotime($request->date1))]);      
             
         }   
+        if($request->date2)
+        {
+            $data =   $data->where('reportdate','<=', [date('Y-m-d', strtotime($request->date2))]);      
+          
+        }
         $data= $data->orderBy("reportdate")
              ->groupBy(DB::raw("reportdate"))
                 ->get();        
 
-        if($request->date1 && $request->date2){   
+        if($request->date1 || $request->date2){   
              $oldata=DB::table('enrollments')
             ->select( 
                 DB::raw("SUM(total_enrolled) as tot")  
@@ -93,7 +98,7 @@ class HomeController extends Controller
         if(count($data) > 0)
         {
             foreach ($data as $key => $value) {
-                if($request->date1 && $request->date2)
+                if($request->date1 || $request->date2)
                 { 
                     $result[++$key] = [date('d/m/Y', strtotime($value->reportdate)), (int)$value->card, (int)$value->tot-(int)$value->card ];
                 
@@ -117,7 +122,7 @@ class HomeController extends Controller
                 {
                     if(count($oldata) > 0)
                     {
-                        if($request->date1 && $request->date2)
+                        if($request->date1 || $request->date2)
                         { 
                         $oldval=  (int)$value->tot - (int)$oldata[0]->tot  ;  
                         $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];
@@ -136,7 +141,7 @@ class HomeController extends Controller
                 else
                 {  
                     $oldval=(int)$data[$key]->tot-(int)$data[$key-1]->tot;
-                    if($request->date1 && $request->date2)
+                    if($request->date1 || $request->date2)
                     { 
                     $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];  
                     }
