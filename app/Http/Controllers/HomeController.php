@@ -55,27 +55,26 @@ class HomeController extends Controller
         $where = []; 
         if($request->dist_id){            
             $where['district_id']= $request->dist_id;
-        }
-        $q =""; 
-        if($request->date1 && $request->date2){             
-            $q =array(date('Y-m-d', strtotime($request->date1)), date('Y-m-d', strtotime($request->date2)));
-        } 
-        else
-        {
-            $q =array('2013-01-01', date('Y-m-d'));
-        }
+        }   
+       
+       // return $q1;
         $data=DB::table('enrollments')
                 ->select(
                     DB::raw("reportdate"),
                     DB::raw("SUM(total_enrolled) as tot"),
                     DB::raw("SUM(scsp_card_issued) as card")
-                )
-                ->whereBetween('reportdate',$q)
-                ->where($where) 
-                ->orderBy("reportdate")
-                    ->groupBy(DB::raw("reportdate"))
-                    ->get();      
-                 
+                ) 
+                ->where($where);
+                     
+
+        if($request->date1 && $request->date2){       
+            $data =   $data->whereBetween('reportdate', [date('Y-m-d', strtotime($request->date1)),date('Y-m-d', strtotime($request->date2))]);      
+            
+        }   
+        $data= $data->orderBy("reportdate")
+             ->groupBy(DB::raw("reportdate"))
+                ->get();        
+
         if($request->date1 && $request->date2){   
              $oldata=DB::table('enrollments')
             ->select( 
@@ -88,8 +87,7 @@ class HomeController extends Controller
         }  
         else
         {
-            $oldata=DB::table('enrollments') 
-            ->where('district_id','0')->get() ; 
+            $oldata=[]; 
         }
         $result[0] = ['Date','Card Issued','Not Issued' ];
         foreach ($data as $key => $value) {
@@ -123,11 +121,12 @@ class HomeController extends Controller
                     }
                     else
                     { 
-                    $oldval=  (int)$value->tot;  
+                         $oldval=  (int)$value->tot;   
                     }
                 }
                 else{
-                    $oldval=  (int)$value->tot;   
+                         $oldval=  (int)$value->tot;    
+                         $resultline[++$key] = [date('d/m/Y', strtotime($value->reportdate)), $oldval];
                 }
             }
             else
@@ -143,6 +142,7 @@ class HomeController extends Controller
             }
             
         }   
+        //return $resultline;
         return view('graphreport', compact('request'))->with('result',json_encode($result))->with('resultline',json_encode($resultline))->with('dist', $dist); 
     }   
 }
